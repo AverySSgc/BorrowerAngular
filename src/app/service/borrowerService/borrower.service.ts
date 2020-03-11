@@ -6,18 +6,18 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 })
 export class BorrowerService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   borrower = {
     ".id": null,
-    "name": "Avery Corbett",
+    "name": null,
     "phone": null,
     "address": null
   }
 
-  // getBorrower(inputId) {
-  //   return this.http.get(`http://localhost:3000/${inputId}`);
-  // }
+  getBorrower(inputId) {
+    return this.http.get(`http://localhost:3000/borrowers/${inputId}`);
+  }
 
   setBorrower(newBorrower) {
     this.borrower = newBorrower;
