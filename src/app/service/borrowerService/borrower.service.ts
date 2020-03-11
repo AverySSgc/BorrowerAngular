@@ -10,7 +10,7 @@ export class BorrowerService {
 
   borrower = {
     ".id": null,
-    "name": null,
+    "name": "Alex Chavez",
     "phone": null,
     "address": null
   }
