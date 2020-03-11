@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BorrowerService } from './service/borrowerService/borrower.service';
+import { BorrowerService } from './services/borrower.service';
 
 
 @Component({

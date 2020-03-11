@@ -15,8 +15,12 @@ export class BorrowerService {
     "address": null
   }
 
-  getBorrower(inputId) {
+  establishBorrower(inputId) {
     return this.http.get(`http://localhost:3000/borrowers/${inputId}`);
+  }
+
+  getBorrower() {
+    return this.borrower;
   }
 
   setBorrower(newBorrower) {
