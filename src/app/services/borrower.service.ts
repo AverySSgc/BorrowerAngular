@@ -9,14 +9,15 @@ export class BorrowerService {
   constructor(private http: HttpClient) { }
 
   borrower = {
-    ".id": null,
+    "_id": null,
     "name": null,
     "phone": null,
     "address": null
   }
+  loggedIn = false;
 
   establishBorrower(inputId) {
-    return this.http.get(`http://localhost:3000/borrowers/${inputId}`);
+    return this.http.get(`http://localhost:3000/borrowers/${inputId}`).toPromise();
   }
 
   getBorrower() {
@@ -25,5 +26,10 @@ export class BorrowerService {
 
   setBorrower(newBorrower) {
     this.borrower = newBorrower;
+  }
+
+  logout() {
+    this.setBorrower(undefined);
+    this.loggedIn = false;
   }
 }
