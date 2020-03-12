@@ -10,13 +10,17 @@ export class BorrowerService {
 
   borrower = {
     ".id": null,
-    "name": "Alex Chavez",
+    "name": null,
     "phone": null,
     "address": null
   }
 
-  getBorrower(inputId) {
+  establishBorrower(inputId) {
     return this.http.get(`http://localhost:3000/borrowers/${inputId}`);
+  }
+
+  getBorrower() {
+    return this.borrower;
   }
 
   setBorrower(newBorrower) {
