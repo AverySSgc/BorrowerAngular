@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'lms/borrowerservice/checkout',
-    pathMatch: 'full'
+    path: 'login',
+    component: LoginComponent
   },
   {
-    path: 'lms/borrowerservice/checkout',
+    path: 'home',
+    component: HomeComponent
+  },
+  {
+    path: 'checkout',
     component: CheckoutComponent
   }
 ];
