@@ -41,6 +41,15 @@ export class BorrowerService {
   setBorrower(newBorrower) {
     this.borrower = newBorrower;
   }
+
+  getAll(url) {
+    return this.http.get(url);
+  }
+
+  post(url, obj) {
+    return this.http.post(url, obj);
+  }
+  
   //logout funtions
   logout() {
     this.setBorrower(undefined);
