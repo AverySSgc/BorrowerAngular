@@ -17,7 +17,16 @@ export class BorrowerService {
     "address": null
   }
 
+  //use .getValue() to get the boolean and .next('newinput') to change it
   loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  isLoggedIn() {
+    return this.loggedIn.getValue();
+  }
+
+  setLoggedIn(input: boolean) {
+    this.loggedIn.next(input);
+  }
 
   //gets borrower info from api
   establishBorrower(inputId) {
