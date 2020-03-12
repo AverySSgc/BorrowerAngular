@@ -15,34 +15,36 @@ export class LoginComponent implements OnInit {
   inputId = '';
 
   ngOnInit() {
-    if (this.borrowerServ.loggedIn)
-      this.router.navigateByUrl("/home")
+    //reroutes user to home if already logged in
+    if (this.borrowerServ.loggedIn.getValue())
+      this.router.navigateByUrl("/home");
   }
 
+  //used to give error message to user
   loginFailed = false;
+  //used to generate loading wheel
   isLoading = false;
 
-
+  //function for logging in
   login = async () => {
     this.isLoading = true;
     try {
+      //calls api for borrower
       let borrowerResp = await this.borrowerServ.establishBorrower(this.inputId);
 
+      //if borrower is found set as active user
       if (borrowerResp.hasOwnProperty("name")) {
         this.borrowerServ.setBorrower(borrowerResp);
-        this.borrowerServ.loggedIn = true;
+        this.borrowerServ.loggedIn.next(true);
         this.loginFailed = false;
       } else {
         throw "error";
       }
+      //sends to home page after logged in
       this.router.navigateByUrl("/home")
     } catch (err) {
       this.loginFailed = true;
     } finally {
-      console.log("loginFailed: " + this.loginFailed);
-      console.log("Borrower Id: " + this.borrowerServ.borrower._id);
-      console.log("Borrower name: " + this.borrowerServ.borrower.name);
-
       this.isLoading = false;
     }
   }
