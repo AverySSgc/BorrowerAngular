@@ -4,20 +4,25 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { CheckoutComponent } from './checkout/checkout.component';
 import { BorrowerService } from './services/borrower.service';
 import { HttpClientModule } from '@angular/common/http';
+import { PagerService } from './services/pager.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    CheckoutComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
-  providers: [BorrowerService],
+  providers: [BorrowerService, PagerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

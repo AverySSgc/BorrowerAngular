@@ -26,4 +26,8 @@ export class BorrowerService {
   setBorrower(newBorrower) {
     this.borrower = newBorrower;
   }
+
+  getAll(url) {
+    return this.http.get(url);
+  }
 }
