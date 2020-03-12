@@ -25,7 +25,7 @@ import { PagerService } from './services/pager.service';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
     FormsModule
   ],
   providers: [BorrowerService, PagerService],
