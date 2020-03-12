@@ -30,4 +30,8 @@ export class BorrowerService {
   getAll(url) {
     return this.http.get(url);
   }
+
+  post(url, obj) {
+    return this.http.post(url, obj);
+  }
 }

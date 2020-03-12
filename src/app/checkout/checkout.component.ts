@@ -22,66 +22,54 @@ export class CheckoutComponent implements OnInit {
   pagedItems: any[];
   searchString = '';
 
-  ngOnInit() {
-    this.getAllBranches().then(() => {
+  async ngOnInit() {
+    this.getAllBranches();
+  }
+
+  getAllBranches() {
+    this.borrowerService.getAll('http://localhost:3000/branches').subscribe(res => {
+      this.branches = res;
       if (this.branches && this.branches.length) {
         this.getAllCopies(0);
       }
     });
   }
 
-  getAllBranches() {
-    return new Promise((resolve, reject) => {
-      this.borrowerService.getAll('http://localhost:3000/branches').subscribe(res => {
-        if (res) {
-          this.branches = res;
-          resolve();
-        } else {
-          reject();
-        }
-      });
-    });
-  }
-
   getAllCopies(index) {
-    return new Promise((resolve, reject) => {
-      this.borrowerService.getAll(`http://localhost:3000/branches/${this.branches[index]._id}/copies`).subscribe(res => {
-        if (res) {
-          this.copies = res;
-          this.copies = this.copies.map(copy => {
-            return {
-              book: {
-                title: copy.book.title,
-                authors: copy.book.authors.map(author => author.name),
-                publisher: copy.book.publisher.name,
-                genres: copy.book.genres.map(genre => genre.name)
-              },
-              amount: copy.amount
-            };
-          });
-          // this.copies = Array.apply(null, Array(200)).map((i, j) => {
-          //   return {
-          //     book: {
-          //       title: `title${j + 1}`,
-          //       authors: `author${j + 1}`,
-          //       publisher: `publisher${j + 1}`,
-          //       genres: `genre${j + 1}`
-          //     },
-          //     amount: Math.floor(Math.random() * 10) % 2
-          //   };
-          // });
-          this.totalCopies = this.copies.length;
-          this.setPage(1);
-          resolve();
-        } else {
-          reject();
-        }
+    this.borrowerService.getAll(`http://localhost:3000/branches/${this.branches[index]._id}/copies`).subscribe(res => {
+      this.copies = res;
+      this.copies = this.copies.map(copy => {
+        return {
+          book: {
+            _id: copy.book._id,
+            title: copy.book.title,
+            authors: copy.book.authors.map(author => author.name),
+            publisher: copy.book.publisher.name,
+            genres: copy.book.genres.map(genre => genre.name)
+          },
+          branch: copy.branch,
+          amount: copy.amount
+        };
       });
+      this.totalCopies = this.copies.length;
+      this.setPage(1);
     });
   }
 
   checkout() {
-    console.log(this.selectedIndex);
+    let data = {
+      borrowerId: "5e66949385ed682e1800f4a2",
+      branchId: this.copies[this.selectedIndex].branch,
+      bookId: this.copies[this.selectedIndex].book._id
+    };
+    this.borrowerService.post('http://localhost:3000/loans', data).subscribe(res => {
+      this.copies[this.selectedIndex].amount--;
+      if (!this.copies[this.selectedIndex].amount) {
+        this.copies.splice(this.selectedIndex, 1);
+        this.setPage(this.pager.currentPage);
+      }
+    });
+    this.modalRef.close();
   }
 
   open(content, index) {
