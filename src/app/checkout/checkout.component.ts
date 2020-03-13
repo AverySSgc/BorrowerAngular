@@ -50,6 +50,7 @@ export class CheckoutComponent implements OnInit {
             publisher: copy.book.publisher.name,
             genres: copy.book.genres.map(genre => genre.name)
           },
+          branch: copy.branch,
           amount: copy.amount
         };
       });
