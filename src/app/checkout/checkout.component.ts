@@ -50,7 +50,6 @@ export class CheckoutComponent implements OnInit {
             publisher: copy.book.publisher.name,
             genres: copy.book.genres.map(genre => genre.name)
           },
-          branch: copy.branch,
           amount: copy.amount
         };
       });
@@ -96,7 +95,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   open(content, index) {
-    this.selectedIndex = index;
+    this.selectedIndex = (this.pager.currentPage - 1) * this.pager.pageSize + index;
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
       result => {
