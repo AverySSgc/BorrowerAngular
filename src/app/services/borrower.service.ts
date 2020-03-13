@@ -33,6 +33,11 @@ export class BorrowerService {
     return this.http.get(`http://localhost:3000/borrowers/${inputId}`).toPromise();
   }
 
+  //registers new borrower and returns the promise of a new borrower
+  registerBorrower(newBorrower) {
+    return this.http.post(`http://localhost:3000/borrowers`, newBorrower).toPromise();
+  }
+
   //gets active borrower
   getBorrower() {
     return this.borrower;
@@ -40,6 +45,7 @@ export class BorrowerService {
   //sets the new active borrower
   setBorrower(newBorrower) {
     this.borrower = newBorrower;
+    this.loggedIn.next(true);
   }
 
   getAll(url) {
@@ -49,7 +55,7 @@ export class BorrowerService {
   post(url, obj) {
     return this.http.post(url, obj);
   }
-  
+
   //logout funtions
   logout() {
     this.setBorrower(undefined);
