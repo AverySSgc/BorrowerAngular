@@ -10,8 +10,12 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { CheckoutComponent } from './checkout/checkout.component';
+import { SignUpComponent } from './sign-up/sign-up.component';
+import { FooterComponent } from './footer/footer.component'
+
 import { BorrowerService } from './services/borrower.service';
 import { PagerService } from './services/pager.service';
+
 
 @NgModule({
   declarations: [
@@ -19,7 +23,9 @@ import { PagerService } from './services/pager.service';
     NavbarComponent,
     LoginComponent,
     HomeComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    SignUpComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

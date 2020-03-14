@@ -58,7 +58,7 @@ export class CheckoutComponent implements OnInit {
 
   checkout() {
     let data = {
-      borrowerId: "5e66949385ed682e1800f4a2",
+      borrowerId: this.borrowerService.borrower._id,
       branchId: this.copies[this.selectedIndex].branch,
       bookId: this.copies[this.selectedIndex].book._id
     };
