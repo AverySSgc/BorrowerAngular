@@ -10,6 +10,8 @@
   </div>
   <div>
     <label>Checkout a book:</label>
+    <div class="form-group"><input class="form-control" type="text" [(ngModel)]="filterString" (input)="filter()">
+    </div>
     <ngb-pagination [collectionSize]="totalCopies" [(page)]="pager.currentPage" [maxSize]="5" [boundaryLinks]="true"
       (pageChange)="setPage($event)"></ngb-pagination>
     <table class="table table-striped">
@@ -46,7 +48,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <span>Are you sure you want to checkout #{{selectedIndex+1}}: {{copies[selectedIndex].book.title}}?</span>
+          <span>Are you sure you want to checkout #{{selectedIndex+1}}:
+            {{filteredItems[selectedIndex].book.title}}?</span>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="c()">Cancel</button>
