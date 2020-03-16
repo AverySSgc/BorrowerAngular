@@ -9,8 +9,6 @@ import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service';
 export class BorrowerService {
 
   constructor(private http: HttpClient, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
-    console.log("we are here");
-
     let storedData = {
       "_id": null,
       "name": null,
@@ -27,7 +25,6 @@ export class BorrowerService {
     if (storedData._id && storedData.name) {
       this.setBorrower(storedData);
     }
-    console.log(`stroedData id= ${storedData._id} storedData name = ${storedData.name}`);
   }
 
   //borrower object
