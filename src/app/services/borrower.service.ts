@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,16 +8,12 @@ import { BehaviorSubject } from 'rxjs';
 export class BorrowerService {
 
   constructor(private http: HttpClient) { }
+  // borrower object
+  borrower = { _id: null };
+  private loans = [];
+  private loansUpdated = new Subject();
 
-  //borrower object
-  borrower = {
-    "_id": null,
-    "name": null,
-    "phone": null,
-    "address": null
-  }
-
-  //use .getValue() to get the boolean and .next('newinput') to change it
+  // use .getValue() to get the boolean and .next('newinput') to change it
   loggedIn: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   isLoggedIn() {
@@ -28,24 +24,49 @@ export class BorrowerService {
     this.loggedIn.next(input);
   }
 
-  //gets borrower info from api
+  // gets borrower info from api
   establishBorrower(inputId) {
     return this.http.get(`http://localhost:3000/borrowers/${inputId}`).toPromise();
   }
 
-  //registers new borrower and returns the promise of a new borrower
+  // registers new borrower and returns the promise of a new borrower
   registerBorrower(newBorrower) {
     return this.http.post(`http://localhost:3000/borrowers`, newBorrower).toPromise();
   }
 
-  //gets active borrower
+  // gets active borrower
   getBorrower() {
     return this.borrower;
   }
-  //sets the new active borrower
+
+  // sets the new active borrower
   setBorrower(newBorrower) {
     this.borrower = newBorrower;
     this.loggedIn.next(true);
+  }
+
+  // gets all the loans belonging to this borrower that have not been checked out
+  getLoans() {
+    this.http.get<any[]>('http://localhost:3000/borrowers/' + this.borrower._id + '/loans')
+    .subscribe(loans => {
+      loans.forEach(loan => {
+        loan.dateDue = new Date(loan.dateDue);
+        loan.dateOut = new Date(loan.dateOut);
+        loan.pastDue = loan.dateDue < new Date();
+      });
+      this.loans = loans;
+      this.loansUpdated.next({
+        loans: [...this.loans]
+      });
+    });
+  }
+
+  getLoansUpdateListener() {
+    return this.loansUpdated.asObservable();
+  }
+
+  returnBook(loanId: string) {
+    return this.http.put('http://localhost:3000/loans', { loanId });
   }
 
   getAll(url) {
@@ -56,7 +77,7 @@ export class BorrowerService {
     return this.http.post(url, obj);
   }
 
-  //logout funtions
+  // logout function
   logout() {
     this.setBorrower(undefined);
     this.loggedIn.next(false);

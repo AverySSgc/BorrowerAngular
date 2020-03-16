@@ -1,4 +1,4 @@
-<h1 style="text-align:center">Welcome to LMS</h1>
+<h1 class="mt-3 text-center">Welcome to LMS</h1>
 <img id="lmsLogo" width="315px" src="/assets/img/SelbyvilleLibrary_Logo_no_text.png">
 
 <div id="login">
@@ -9,7 +9,7 @@
           <form id="login-form" class="form" action="" method="post">
             <h3 class="text-center text-info">Login</h3>
             <div class="form-group">
-              <label for="username" class="text-info">BorrowerID</label><label *ngIf="loginFailed"
+              <label for="username" class="text-info">Card Number</label><label *ngIf="loginFailed"
                 id="loginFailure">LOGIN
                 FAILED!!!</label><br>
               <input type="text" (keyup.enter)="login()" [(ngModel)]="inputId" [ngModelOptions]="{standalone: true}"
