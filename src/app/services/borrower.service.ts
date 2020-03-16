@@ -86,5 +86,9 @@ export class BorrowerService {
   logout() {
     this.setBorrower(undefined);
     this.loggedIn.next(false);
+    this.storage.set("borrower._id", null);
+    this.storage.set("borrower.name", null);
+    this.storage.set("borrower.phone", null);
+    this.storage.set("borrower.address", null);
   }
 }
