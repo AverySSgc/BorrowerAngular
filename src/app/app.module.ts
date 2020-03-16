@@ -12,10 +12,12 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
-import { FooterComponent } from './footer/footer.component'
+import { FooterComponent } from './footer/footer.component';
+import { ReturnComponent } from './return/return.component';
 
 import { BorrowerService } from './services/borrower.service';
 import { PagerService } from './services/pager.service';
+import { AuthGuardService as AuthGuard } from './services/auth-guard.service';
 
 
 @NgModule({
@@ -26,7 +28,8 @@ import { PagerService } from './services/pager.service';
     HomeComponent,
     CheckoutComponent,
     SignUpComponent,
-    FooterComponent
+    FooterComponent,
+    ReturnComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +39,7 @@ import { PagerService } from './services/pager.service';
     FormsModule,
     StorageServiceModule
   ],
-  providers: [BorrowerService, PagerService],
+  providers: [BorrowerService, PagerService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
