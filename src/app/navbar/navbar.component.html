@@ -1,16 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
-  <a class="navbar-brand" [routerLink]="['home']">Borrower</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-    aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <a class="navbar-brand" [routerLink]="['home']">HOME</a>
   <button [routerLink]="['login']" style="position: absolute; right: 5px;" type="button" class="btn btn-primary"
     *ngIf="showLogout" (click)="logout()">Logout</button>
-  <div class="collapse navbar-collapse" id="navbarText">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" routerLink="/home">Home <span class="sr-only">(current)</span></a>
-      </li>
-    </ul>
-  </div>
 </nav>
