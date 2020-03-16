@@ -30,7 +30,12 @@ export class BorrowerService {
   }
 
   // borrower object
-  borrower = { _id: null };
+  borrower = {
+    _id: null,
+    name: null,
+    phone: null,
+    address: null
+  };
   private loans = [];
   private loansUpdated = new Subject();
 
@@ -74,17 +79,17 @@ export class BorrowerService {
   // gets all the loans belonging to this borrower that have not been checked out
   getLoans() {
     this.http.get<any[]>('http://localhost:3000/borrowers/' + this.borrower._id + '/loans')
-    .subscribe(loans => {
-      loans.forEach(loan => {
-        loan.dateDue = new Date(loan.dateDue);
-        loan.dateOut = new Date(loan.dateOut);
-        loan.pastDue = loan.dateDue < new Date();
+      .subscribe(loans => {
+        loans.forEach(loan => {
+          loan.dateDue = new Date(loan.dateDue);
+          loan.dateOut = new Date(loan.dateOut);
+          loan.pastDue = loan.dateDue < new Date();
+        });
+        this.loans = loans;
+        this.loansUpdated.next({
+          loans: [...this.loans]
+        });
       });
-      this.loans = loans;
-      this.loansUpdated.next({
-        loans: [...this.loans]
-      });
-    });
   }
 
   getLoansUpdateListener() {
