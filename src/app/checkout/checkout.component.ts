@@ -35,6 +35,8 @@ export class CheckoutComponent implements OnInit {
       this.branches = res;
       if (this.branches && this.branches.length) {
         this.getAllCopies(0);
+      } else {
+        this.isLoading = false;
       }
     },
       error => {
@@ -48,21 +50,27 @@ export class CheckoutComponent implements OnInit {
     this.borrowerService.getAll(`http://localhost:3000/branches/${this.branches[index]._id}/copies`).subscribe(res => {
       this.isLoading = false;
       this.copies = res;
-      this.copies = this.copies.map(copy => {
-        return {
-          book: {
-            _id: copy.book._id,
-            title: copy.book.title,
-            authors: copy.book.authors.map(author => author.name),
-            publisher: copy.book.publisher.name,
-            genres: copy.book.genres.map(genre => genre.name)
-          },
-          branch: copy.branch,
-          amount: copy.amount
-        };
-      });
-      this.filterCopies();
-      this.setPage(1);
+      if (this.copies && this.copies.length) {
+        this.copies = this.copies.map(copy => {
+          return {
+            book: {
+              _id: copy.book._id,
+              title: copy.book.title,
+              authors: copy.book.authors.map(author => author.name),
+              publisher: copy.book.publisher.name,
+              genres: copy.book.genres.map(genre => genre.name)
+            },
+            branch: copy.branch,
+            amount: copy.amount
+          };
+        });
+        this.filterCopies();
+        this.setPage(1);
+      } else {
+        this.copies = [];
+        this.filterCopies();
+        this.pagedItems = [];
+      }
     },
       error => {
         this.isLoading = false;
