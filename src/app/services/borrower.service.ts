@@ -1,13 +1,34 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class BorrowerService {
 
-  constructor(private http: HttpClient) { }
+
+  constructor(private http: HttpClient, @Inject(SESSION_STORAGE) private storage: WebStorageService) {
+    let storedData = {
+      "_id": null,
+      "name": null,
+      "phone": null,
+      "address": null
+    };
+
+    //check session data for active borrower
+    storedData._id = this.storage.get("borrower._id");
+    storedData.name = this.storage.get("borrower.name");
+    storedData.phone = this.storage.get("borrower.phone");
+    storedData.address = this.storage.get("borrower.address");
+
+    if (storedData._id && storedData.name) {
+      this.setBorrower(storedData);
+    }
+  }
+
   // borrower object
   borrower = { _id: null };
   private loans = [];
@@ -43,6 +64,11 @@ export class BorrowerService {
   setBorrower(newBorrower) {
     this.borrower = newBorrower;
     this.loggedIn.next(true);
+    this.storage.set("borrower._id", this.borrower._id);
+    this.storage.set("borrower.name", this.borrower.name);
+    this.storage.set("borrower.phone", this.borrower.phone);
+    this.storage.set("borrower.address", this.borrower.address);
+    console.log("Borrower Set!!!");
   }
 
   // gets all the loans belonging to this borrower that have not been checked out
@@ -81,5 +107,9 @@ export class BorrowerService {
   logout() {
     this.setBorrower(undefined);
     this.loggedIn.next(false);
+    this.storage.set("borrower._id", null);
+    this.storage.set("borrower.name", null);
+    this.storage.set("borrower.phone", null);
+    this.storage.set("borrower.address", null);
   }
 }
