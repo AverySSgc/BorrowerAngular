@@ -105,7 +105,7 @@ export class CheckoutComponent implements OnInit {
       },
       reason => {
         this.errMsg = '',
-          this.closeResult = `Dismissed`
+        this.closeResult = `Dismissed`
       }
     )
   }
