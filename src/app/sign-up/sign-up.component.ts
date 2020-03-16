@@ -20,6 +20,11 @@ export class SignUpComponent implements OnInit {
 
 
   isLoading = false;
+  invalidInput = {
+    name: false,
+    phone: false,
+    address: false
+  };
   signUpError = false;
 
   ngOnInit() {
@@ -27,6 +32,21 @@ export class SignUpComponent implements OnInit {
 
   signUp = async () => {
     this.isLoading = true;
+    this.invalidInput = {
+      name: false,
+      phone: false,
+      address: false
+    };
+    if (!(this.User.name.length >= 2) || !(this.User.phone.length >= 10) || !(this.User.address.length >= 10)) {
+      if (!(this.User.name.length >= 2))
+        this.invalidInput.name = true;
+      if (!(this.User.phone.length >= 10))
+        this.invalidInput.phone = true;
+      if (!(this.User.address.length >= 10))
+        this.invalidInput.address = true;
+      this.isLoading = false;
+      return;
+    }
     try {
       let newUser = await this.borrowerServ.registerBorrower(this.User);
       if (!newUser.hasOwnProperty("_id"))

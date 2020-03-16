@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ReturnComponent } from './return/return.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 import { AuthGuardService as AuthGuard } from './services/auth-guard.service';
 
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'signup',
     component: SignUpComponent,
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
   }
 ];
 

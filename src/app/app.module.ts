@@ -18,6 +18,7 @@ import { ReturnComponent } from './return/return.component';
 import { BorrowerService } from './services/borrower.service';
 import { PagerService } from './services/pager.service';
 import { AuthGuardService as AuthGuard } from './services/auth-guard.service';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { AuthGuardService as AuthGuard } from './services/auth-guard.service';
     CheckoutComponent,
     SignUpComponent,
     FooterComponent,
-    ReturnComponent
+    ReturnComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
