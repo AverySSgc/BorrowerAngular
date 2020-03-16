@@ -14,6 +14,7 @@ export class CheckoutComponent implements OnInit {
   branches: any;
   copies: any;
   totalCopies: number;
+  isLoading = false;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
@@ -28,18 +29,24 @@ export class CheckoutComponent implements OnInit {
   }
 
   getAllBranches() {
+    this.isLoading = true;
     this.borrowerService.getAll('http://localhost:3000/branches').subscribe(res => {
+      this.isLoading = false;
       this.branches = res;
       if (this.branches && this.branches.length) {
         this.getAllCopies(0);
       }
     },
-      error => { }
+      error => {
+        this.isLoading = false;
+      }
     );
   }
 
   getAllCopies(index) {
+    this.isLoading = true;
     this.borrowerService.getAll(`http://localhost:3000/branches/${this.branches[index]._id}/copies`).subscribe(res => {
+      this.isLoading = false;
       this.copies = res;
       this.copies = this.copies.map(copy => {
         return {
@@ -58,6 +65,7 @@ export class CheckoutComponent implements OnInit {
       this.setPage(1);
     },
       error => {
+        this.isLoading = false;
         this.copies = [];
         this.filterCopies();
         this.pagedItems = [];
@@ -81,7 +89,9 @@ export class CheckoutComponent implements OnInit {
       branchId: this.copies[this.selectedIndex].branch,
       bookId: this.copies[this.selectedIndex].book._id
     };
+    this.isLoading = true;
     this.borrowerService.post('http://localhost:3000/loans', data).subscribe(res => {
+      this.isLoading = false;
       this.filteredItems[this.selectedIndex].amount--;
       if (!this.filteredItems[this.selectedIndex].amount) {
         this.filteredItems.splice(this.selectedIndex, 1);
@@ -90,6 +100,7 @@ export class CheckoutComponent implements OnInit {
       this.modalRef.close();
     },
       error => {
+        this.isLoading = false;
         this.modalRef.dismiss();
       }
     );
@@ -105,7 +116,7 @@ export class CheckoutComponent implements OnInit {
       },
       reason => {
         this.errMsg = '',
-        this.closeResult = `Dismissed`
+          this.closeResult = `Dismissed`
       }
     )
   }
