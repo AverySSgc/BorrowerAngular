@@ -94,8 +94,8 @@ export class CheckoutComponent implements OnInit {
   checkout() {
     let data = {
       borrowerId: this.borrowerService.borrower._id,
-      branchId: this.copies[this.selectedIndex].branch,
-      bookId: this.copies[this.selectedIndex].book._id
+      branchId: this.filteredItems[this.selectedIndex].branch,
+      bookId: this.filteredItems[this.selectedIndex].book._id
     };
     this.isLoading = true;
     this.borrowerService.post('http://localhost:3000/loans', data).subscribe(res => {
