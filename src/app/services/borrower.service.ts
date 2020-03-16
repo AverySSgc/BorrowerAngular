@@ -36,7 +36,6 @@ export class BorrowerService {
     phone: null,
     address: null
   };
-  private loans = [];
   private loansUpdated = new Subject();
 
   // use .getValue() to get the boolean and .next('newinput') to change it
@@ -84,9 +83,8 @@ export class BorrowerService {
           loan.dateOut = new Date(loan.dateOut);
           loan.pastDue = loan.dateDue < new Date();
         });
-        this.loans = loans;
         this.loansUpdated.next({
-          loans: [...this.loans]
+          loans: [...loans]
         });
       });
   }
