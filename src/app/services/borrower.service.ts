@@ -73,7 +73,6 @@ export class BorrowerService {
     this.storage.set("borrower.name", this.borrower.name);
     this.storage.set("borrower.phone", this.borrower.phone);
     this.storage.set("borrower.address", this.borrower.address);
-    console.log("Borrower Set!!!");
   }
 
   // gets all the loans belonging to this borrower that have not been checked out
@@ -110,7 +109,12 @@ export class BorrowerService {
 
   // logout function
   logout() {
-    this.setBorrower(undefined);
+    this.setBorrower({
+      _id: null,
+      name: null,
+      phone: null,
+      address: null
+    });
     this.loggedIn.next(false);
     this.storage.set("borrower._id", null);
     this.storage.set("borrower.name", null);

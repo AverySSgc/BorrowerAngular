@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BorrowerService } from 'src/app/services/borrower.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +9,7 @@ import { BorrowerService } from 'src/app/services/borrower.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private borrowerServ: BorrowerService) { }
+  constructor(private borrowerServ: BorrowerService, private router: Router) { }
 
 
   showLogout = this.borrowerServ.loggedIn.getValue();
@@ -21,6 +22,8 @@ export class NavbarComponent implements OnInit {
 
   logout() {
     this.borrowerServ.logout();
+    this.router.navigateByUrl("/login");
+
   }
 
 }
