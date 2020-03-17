@@ -75,6 +75,7 @@ export class CheckoutComponent implements OnInit {
         this.setPage(this.selectedPageIndex);
       } else {
         this.copies = [];
+        this.totalCopies = 0;
       }
     },
       error => {
