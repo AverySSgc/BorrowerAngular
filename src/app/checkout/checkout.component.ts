@@ -12,14 +12,17 @@ export class CheckoutComponent implements OnInit {
 
   constructor(private borrowerService: BorrowerService, private modalService: NgbModal, private pagerService: PagerService) { }
   branches: any;
-  copies: any;
+  selectedBranchIndex: number = 0;
+  copiesData: any;
   totalCopies: number;
   isLoading = false;
   private modalRef: NgbModalRef;
   errMsg: any;
   closeResult: any;
   selectedIndex: any;
-  pager: any = {};
+  pager: any = {
+    pageSize: 10
+  };
   pagedItems: any[];
   filterString = '';
   filteredItems: any[]
@@ -34,9 +37,7 @@ export class CheckoutComponent implements OnInit {
       this.isLoading = false;
       this.branches = res;
       if (this.branches && this.branches.length) {
-        this.getAllCopies(0);
-      } else {
-        this.isLoading = false;
+        this.setPage(1);
       }
     },
       error => {
@@ -45,45 +46,14 @@ export class CheckoutComponent implements OnInit {
     );
   }
 
-  getAllCopies(index) {
-    this.isLoading = true;
-    this.borrowerService.getAll(`http://localhost:3000/branches/${this.branches[index]._id}/copies`).subscribe(res => {
-      this.isLoading = false;
-      this.copies = res;
-      if (this.copies && this.copies.length) {
-        this.copies = this.copies.map(copy => {
-          return {
-            book: {
-              _id: copy.book._id,
-              title: copy.book.title,
-              authors: copy.book.authors.map(author => author.name),
-              publisher: copy.book.publisher.name,
-              genres: copy.book.genres.map(genre => genre.name)
-            },
-            branch: copy.branch,
-            amount: copy.amount
-          };
-        });
-        this.filterCopies();
-        this.setPage(1);
-      } else {
-        this.copies = [];
-        this.filterCopies();
-        this.pagedItems = [];
-      }
-    },
-      error => {
-        this.isLoading = false;
-        this.copies = [];
-        this.filterCopies();
-        this.pagedItems = [];
-      }
-    );
+  changeBranch(selectedIndex) {
+    this.selectedBranchIndex = selectedIndex;
+    this.setPage(1);
   }
 
   filterCopies() {
-    this.filteredItems = this.copies.filter(copy => copy.book.title.toLowerCase().includes(this.filterString.toLowerCase()));
-    this.totalCopies = this.filteredItems.length;
+    this.filteredItems = this.copiesData.copies.filter(copy => copy.book.title.toLowerCase().includes(this.filterString.toLowerCase()));
+    this.totalCopies = this.copiesData.count ? this.copiesData.count.value : 0;
   }
 
   filter() {
@@ -94,7 +64,7 @@ export class CheckoutComponent implements OnInit {
   checkout() {
     let data = {
       borrowerId: this.borrowerService.borrower._id,
-      branchId: this.filteredItems[this.selectedIndex].branch,
+      branchId: this.filteredItems[this.selectedIndex].branch._id,
       bookId: this.filteredItems[this.selectedIndex].book._id
     };
     this.isLoading = true;
@@ -115,7 +85,8 @@ export class CheckoutComponent implements OnInit {
   }
 
   open(content, index) {
-    this.selectedIndex = (this.pager.currentPage - 1) * this.pager.pageSize + index;
+    console.log(index);
+    this.selectedIndex = index;
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
       result => {
@@ -133,10 +104,39 @@ export class CheckoutComponent implements OnInit {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
-    this.pager = this.pagerService.getPager(this.copies.length, page, 10);
-    this.pagedItems = this.filteredItems.slice(
-      this.pager.startIndex,
-      this.pager.endIndex + 1
+    this.isLoading = true;
+    this.borrowerService.getAll(`http://localhost:3000/branches/${this.branches[this.selectedBranchIndex]._id}/copies/skip/${this.pager.currentPage ? ((this.pager.currentPage - 1) * this.pager.pageSize) : 0}/limit/${this.pager.pageSize || 0}`).subscribe(res => {
+      this.isLoading = false;
+      this.copiesData = res;
+      if (this.copiesData && this.copiesData.copies && this.copiesData.copies.length) {
+        this.copiesData.copies = this.copiesData.copies.map(copy => {
+          return {
+            book: {
+              _id: copy.book._id,
+              title: copy.book.title,
+              authors: copy.book.authors.map(author => author.name),
+              publisher: copy.book.publisher.name,
+              genres: copy.book.genres.map(genre => genre.name)
+            },
+            branch: copy.branch,
+            amount: copy.amount
+          };
+        });
+        this.filterCopies();
+        this.pager = this.pagerService.getPager(this.totalCopies, page, this.pager.pageSize);
+        this.pagedItems = this.filteredItems;
+      } else {
+        this.copiesData.copies = [];
+        this.filterCopies();
+        this.pagedItems = [];
+      }
+    },
+      error => {
+        this.isLoading = false;
+        this.copiesData.copies = [];
+        this.filterCopies();
+        this.pagedItems = [];
+      }
     );
   }
 }
