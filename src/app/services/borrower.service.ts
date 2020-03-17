@@ -3,6 +3,7 @@ import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -52,12 +53,12 @@ export class BorrowerService {
 
   // gets borrower info from api
   establishBorrower(inputId) {
-    return this.http.get(`http://localhost:3000/borrowers/${inputId}`).toPromise();
+    return this.http.get(environment.apiUrl + inputId).toPromise();
   }
 
   // registers new borrower and returns the promise of a new borrower
   registerBorrower(newBorrower) {
-    return this.http.post(`http://localhost:3000/borrowers`, newBorrower).toPromise();
+    return this.http.post(environment.apiUrl + '/borrowers', newBorrower).toPromise();
   }
 
   // gets active borrower
@@ -78,7 +79,7 @@ export class BorrowerService {
   // gets all the loans belonging to this borrower that have not been checked out
   getLoans(loansPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${loansPerPage}&page=${currentPage}`;
-    this.http.get<{ loans: any[], numLoans: number }>(`http://localhost:3000/borrowers/${this.borrower._id}/loans${queryParams}`)
+    this.http.get<{ loans: any[], numLoans: number }>(environment.apiUrl + `/${this.borrower._id}/loans${queryParams}`)
       .pipe(map((loanData) => {
         return { loans: loanData.loans.map(loan => {
           return {
@@ -104,7 +105,7 @@ export class BorrowerService {
   }
 
   returnBook(loanId: string) {
-    return this.http.put('http://localhost:3000/loans', { loanId });
+    return this.http.put(environment.apiUrl + '/loans', { loanId });
   }
 
   getAll(url) {
