@@ -81,16 +81,18 @@ export class BorrowerService {
     const queryParams = `?pagesize=${loansPerPage}&page=${currentPage}`;
     this.http.get<{ loans: any[], numLoans: number }>(environment.apiUrl + `/borrowers/${this.borrower._id}/loans${queryParams}`)
       .pipe(map((loanData) => {
-        return { loans: loanData.loans.map(loan => {
-          return {
-            id: loan._id,
-            book: loan.book.title,
-            branch: loan.branch.name,
-            dateOut: new Date(loan.dateOut),
-            dateDue: new Date(loan.dateDue),
-            pastDue: (new Date(loan.dateDue) < new Date())
-          };
-        }), numLoans: loanData.numLoans};
+        return {
+          loans: loanData.loans.map(loan => {
+            return {
+              id: loan._id,
+              book: loan.book.title,
+              branch: loan.branch.name,
+              dateOut: new Date(loan.dateOut),
+              dateDue: new Date(loan.dateDue),
+              pastDue: (new Date(loan.dateDue) < new Date())
+            };
+          }), numLoans: loanData.numLoans
+        };
       }))
       .subscribe(newLoanData => {
         this.loansUpdated.next({
@@ -109,24 +111,24 @@ export class BorrowerService {
   }
 
   get(url) {
-    return this.http.get(url);
+    return this.http.get(environment.apiUrl + url);
   }
 
-  query(uri, query) {
-    uri = 'http://localhost:3000/' + uri;
+  query(url, query) {
+    url = environment.apiUrl + url;
     if (query && query.length) {
       let entry = Object.entries(query[0])[0];
-      uri += `?${entry[0]}=${entry[1]}`;
+      url += `?${entry[0]}=${entry[1]}`;
     }
     for (let i = 1; i < query.length; i++) {
       let entry = Object.entries(query[i])[0];
-      uri += `&${entry[0]}=${entry[1]}`;
+      url += `&${entry[0]}=${entry[1]}`;
     }
-    return this.http.get(uri);
+    return this.http.get(url);
   }
 
   post(url, obj) {
-    return this.http.post(url, obj);
+    return this.http.post(environment.apiUrl + url, obj);
   }
 
   // logout function

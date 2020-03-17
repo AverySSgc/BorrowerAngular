@@ -33,7 +33,7 @@ export class CheckoutComponent implements OnInit {
 
   getAllBranches() {
     this.isLoading = true;
-    this.borrowerService.get('http://localhost:3000/branches').subscribe(res => {
+    this.borrowerService.get('/branches').subscribe(res => {
       this.isLoading = false;
       this.branches = res;
       if (this.branches && this.branches.length) {
@@ -54,7 +54,7 @@ export class CheckoutComponent implements OnInit {
       query.push({ title: this.searchString });
     }
     this.isLoading = true;
-    this.borrowerService.query(`branches/${this.branches[this.selectedBranchIndex]._id}/copies`, query).subscribe(res => {
+    this.borrowerService.query(`/branches/${this.branches[this.selectedBranchIndex]._id}/copies`, query).subscribe(res => {
       this.isLoading = false;
       if (res) {
         this.copies = res['copies'];
@@ -100,7 +100,7 @@ export class CheckoutComponent implements OnInit {
       bookId: this.copies[this.selectedBookIndex].book._id
     };
     this.isLoading = true;
-    this.borrowerService.post('http://localhost:3000/loans', data).subscribe(res => {
+    this.borrowerService.post('/loans', data).subscribe(res => {
       this.isLoading = false;
       this.copies[this.selectedBookIndex].amount--;
       if (!this.copies[this.selectedBookIndex].amount) {
