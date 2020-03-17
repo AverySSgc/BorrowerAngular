@@ -53,7 +53,7 @@ export class BorrowerService {
 
   // gets borrower info from api
   establishBorrower(inputId) {
-    return this.http.get(environment.apiUrl + inputId).toPromise();
+    return this.http.get(`${environment.apiUrl}/borrowers/${inputId}`).toPromise();
   }
 
   // registers new borrower and returns the promise of a new borrower
@@ -79,7 +79,7 @@ export class BorrowerService {
   // gets all the loans belonging to this borrower that have not been checked out
   getLoans(loansPerPage: number, currentPage: number) {
     const queryParams = `?pagesize=${loansPerPage}&page=${currentPage}`;
-    this.http.get<{ loans: any[], numLoans: number }>(environment.apiUrl + `/${this.borrower._id}/loans${queryParams}`)
+    this.http.get<{ loans: any[], numLoans: number }>(environment.apiUrl + `/borrowers/${this.borrower._id}/loans${queryParams}`)
       .pipe(map((loanData) => {
         return { loans: loanData.loans.map(loan => {
           return {
