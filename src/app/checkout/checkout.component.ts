@@ -85,7 +85,6 @@ export class CheckoutComponent implements OnInit {
   }
 
   open(content, index) {
-    console.log(index);
     this.selectedIndex = index;
     this.modalRef = this.modalService.open(content);
     this.modalRef.result.then(
@@ -126,14 +125,15 @@ export class CheckoutComponent implements OnInit {
         this.pager = this.pagerService.getPager(this.totalCopies, page, this.pager.pageSize);
         this.pagedItems = this.filteredItems;
       } else {
-        this.copiesData.copies = [];
         this.filterCopies();
         this.pagedItems = [];
       }
     },
       error => {
         this.isLoading = false;
-        this.copiesData.copies = [];
+        this.copiesData = {
+          copies: []
+        };
         this.filterCopies();
         this.pagedItems = [];
       }
