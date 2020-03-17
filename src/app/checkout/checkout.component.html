@@ -15,7 +15,7 @@
   </div>
   <div>
     <label>Checkout a book:</label>
-    <div class="form-group"><input class="form-control" type="text" [(ngModel)]="searchString" (input)="getAllCopies()">
+    <div class="form-group"><input class="form-control" type="text" [(ngModel)]="searchString" (input)="changeSearch()">
     </div>
     <ngb-pagination [collectionSize]="totalCopies" [(page)]="pager.currentPage" [maxSize]="5" [boundaryLinks]="true"
       (pageChange)="changePage($event)"></ngb-pagination>

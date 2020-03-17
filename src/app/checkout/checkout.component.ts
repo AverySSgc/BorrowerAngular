@@ -89,6 +89,10 @@ export class CheckoutComponent implements OnInit {
     this.getAllCopies();
   }
 
+  changeSearch() {
+    this.getAllCopies();
+  }
+
   changePage(selectedIndex) {
     this.selectedPageIndex = selectedIndex;
     this.getAllCopies();
