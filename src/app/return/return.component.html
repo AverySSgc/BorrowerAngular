@@ -6,7 +6,7 @@
     </div>
   </div>
   <ngb-pagination [collectionSize]="totalLoans" [(page)]="currentPage" [maxSize]="5" [boundaryLinks]="true"
-      (pageChange)="setPage($event)"></ngb-pagination>
+    (pageChange)="setPage($event)"></ngb-pagination>
   <div class="mt-2">
     <table class="table table-striped">
       <thead class="thead-dark">
@@ -22,12 +22,14 @@
           <td class="align-middle">{{i+1+currentIndex}}</td>
           <td class="align-middle">{{loan.branch.name}}</td>
           <td class="align-middle">{{loan.book.title}}</td>
-          <td class="align-middle">{{loan.dateOut.getMonth() + 1}}/{{loan.dateOut.getDate()}}/{{loan.dateOut.getFullYear()}}</td>
+          <td class="align-middle">
+            {{loan.dateOut.getMonth() + 1}}/{{loan.dateOut.getDate()}}/{{loan.dateOut.getFullYear()}}</td>
           <td class="align-middle">
             {{loan.dateDue.getMonth() + 1}}/{{loan.dateDue.getDate()}}/{{loan.dateDue.getFullYear()}}
             <span class="badge badge-danger" *ngIf="loan.pastDue">Past Due!</span>
           </td>
-          <td class="align-middle"><button class="btn btn-primary" (click)="open(returnModal, i+currentIndex)">Return Book</button></td>
+          <td class="align-middle"><button class="btn btn-primary" (click)="open(returnModal, i+currentIndex)">Return
+              Book</button></td>
         </tr>
       </tbody>
     </table>
@@ -42,7 +44,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to return {{allLoans[selectedIndex].book.title}} to {{allLoans[selectedIndex].branch.name}}?</p>
+          <p>Are you sure you want to return {{allLoans[selectedIndex].book.title}} to
+            {{allLoans[selectedIndex].branch.name}}?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="c()">Cancel</button>
