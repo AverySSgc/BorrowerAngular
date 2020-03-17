@@ -108,8 +108,21 @@ export class BorrowerService {
     return this.http.put(environment.apiUrl + '/loans', { loanId });
   }
 
-  getAll(url) {
+  get(url) {
     return this.http.get(url);
+  }
+
+  query(uri, query) {
+    uri = 'http://localhost:3000/' + uri;
+    if (query && query.length) {
+      let entry = Object.entries(query[0])[0];
+      uri += `?${entry[0]}=${entry[1]}`;
+    }
+    for (let i = 1; i < query.length; i++) {
+      let entry = Object.entries(query[i])[0];
+      uri += `&${entry[0]}=${entry[1]}`;
+    }
+    return this.http.get(uri);
   }
 
   post(url, obj) {
