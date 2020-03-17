@@ -12,9 +12,8 @@ export class ReturnComponent implements OnInit, OnDestroy {
 
   constructor(private borrowerService: BorrowerService, private modalService: NgbModal) { }
 
-  allLoans = [];
   loans = [];
-  totalLoans: number;
+  numLoans: number;
   totalPages: number;
   isLoading = false;
   currentPage = 1;
@@ -22,22 +21,18 @@ export class ReturnComponent implements OnInit, OnDestroy {
   loansPerPage = 10;
   private loansSub: Subscription;
   private modalRef: NgbModalRef;
-  errMsg: string;
-  closeResult: string;
   selectedIndex: number;
 
   ngOnInit() {
     this.isLoading = true;
-    this.borrowerService.getLoans();
+    this.borrowerService.getLoans(this.loansPerPage, this.currentPage);
     this.loansSub = this.borrowerService.getLoansUpdateListener()
-      .subscribe((loanData: { loans: any[] }) => {
+      .subscribe((loanData: { loans: any[], numLoans: number }) => {
         this.isLoading = false;
-        this.allLoans = loanData.loans;
-        this.totalLoans = this.allLoans.length;
-        this.loans = this.allLoans.slice((this.currentPage - 1) * this.loansPerPage,
-          this.currentPage * this.loansPerPage);
+        this.loans = loanData.loans;
+        this.numLoans = loanData.numLoans;
         this.currentIndex = (this.currentPage - 1) * this.loansPerPage;
-        this.totalPages = Math.ceil(this.totalLoans / this.loansPerPage);
+        this.totalPages = Math.ceil(this.numLoans / this.loansPerPage);
       });
   }
 
@@ -47,10 +42,10 @@ export class ReturnComponent implements OnInit, OnDestroy {
 
   onReturnBook() {
     this.isLoading = true;
-    let loanId = this.allLoans[this.selectedIndex]._id;
+    let loanId = this.loans[this.selectedIndex].id;
     this.borrowerService.returnBook(loanId).subscribe(() => {
       this.modalRef.close();
-      this.borrowerService.getLoans();
+      this.borrowerService.getLoans(this.loansPerPage, this.currentPage);
     });
   }
 
@@ -58,8 +53,8 @@ export class ReturnComponent implements OnInit, OnDestroy {
     if (page < 1 || page > this.totalPages) {
       return;
     }
-    this.loans = this.allLoans.slice((this.currentPage - 1) * this.loansPerPage,
-      this.currentPage * this.loansPerPage);
+    this.currentPage = page;
+    this.borrowerService.getLoans(this.loansPerPage, this.currentPage);
     this.currentIndex = (this.currentPage - 1) * this.loansPerPage;
   }
 

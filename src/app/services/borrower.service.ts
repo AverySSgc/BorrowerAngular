@@ -2,6 +2,8 @@ import { Injectable, Inject } from '@angular/core';
 import { SESSION_STORAGE, WebStorageService } from 'angular-webstorage-service';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -51,12 +53,12 @@ export class BorrowerService {
 
   // gets borrower info from api
   establishBorrower(inputId) {
-    return this.http.get(`http://localhost:3000/borrowers/${inputId}`).toPromise();
+    return this.http.get(`${environment.apiUrl}/borrowers/${inputId}`).toPromise();
   }
 
   // registers new borrower and returns the promise of a new borrower
   registerBorrower(newBorrower) {
-    return this.http.post(`http://localhost:3000/borrowers`, newBorrower).toPromise();
+    return this.http.post(environment.apiUrl + '/borrowers', newBorrower).toPromise();
   }
 
   // gets active borrower
@@ -75,16 +77,25 @@ export class BorrowerService {
   }
 
   // gets all the loans belonging to this borrower that have not been checked out
-  getLoans() {
-    this.http.get<any[]>('http://localhost:3000/borrowers/' + this.borrower._id + '/loans')
-      .subscribe(loans => {
-        loans.forEach(loan => {
-          loan.dateDue = new Date(loan.dateDue);
-          loan.dateOut = new Date(loan.dateOut);
-          loan.pastDue = loan.dateDue < new Date();
-        });
+  getLoans(loansPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${loansPerPage}&page=${currentPage}`;
+    this.http.get<{ loans: any[], numLoans: number }>(environment.apiUrl + `/borrowers/${this.borrower._id}/loans${queryParams}`)
+      .pipe(map((loanData) => {
+        return { loans: loanData.loans.map(loan => {
+          return {
+            id: loan._id,
+            book: loan.book.title,
+            branch: loan.branch.name,
+            dateOut: new Date(loan.dateOut),
+            dateDue: new Date(loan.dateDue),
+            pastDue: (new Date(loan.dateDue) < new Date())
+          };
+        }), numLoans: loanData.numLoans};
+      }))
+      .subscribe(newLoanData => {
         this.loansUpdated.next({
-          loans: [...loans]
+          loans: [...newLoanData.loans],
+          numLoans: newLoanData.numLoans
         });
       });
   }
@@ -94,7 +105,7 @@ export class BorrowerService {
   }
 
   returnBook(loanId: string) {
-    return this.http.put('http://localhost:3000/loans', { loanId });
+    return this.http.put(environment.apiUrl + '/loans', { loanId });
   }
 
   getAll(url) {
