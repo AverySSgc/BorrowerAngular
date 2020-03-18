@@ -2,9 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { AppRoutingModule } from './app-routing.module';
-import { StorageServiceModule } from 'angular-webstorage-service'
+import { StorageServiceModule } from 'angular-webstorage-service';
+
 
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -39,7 +40,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     HttpClientModule,
     NgbModule,
     FormsModule,
-    StorageServiceModule
+    StorageServiceModule,
+    ReactiveFormsModule
   ],
   providers: [BorrowerService, PagerService, AuthGuard],
   bootstrap: [AppComponent]

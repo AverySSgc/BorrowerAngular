@@ -19,6 +19,10 @@ export class NavbarComponent implements OnInit {
     this.observer = this.borrowerServ.loggedIn.subscribe(value => this.showLogout = value);
   }
 
+  ngOnDestroy() {
+    this.observer.unsubscribe();
+  }
+
   logout() {
     this.borrowerServ.logout();
     this.router.navigateByUrl("/login");

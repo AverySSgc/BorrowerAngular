@@ -53,12 +53,12 @@ export class BorrowerService {
 
   // gets borrower info from api
   establishBorrower(inputId) {
-    return this.http.get(`${environment.apiUrl}/borrowers/${inputId}`).toPromise();
+    return this.http.get(`${environment.apiUrl}/borrowers/${inputId}`);
   }
 
   // registers new borrower and returns the promise of a new borrower
   registerBorrower(newBorrower) {
-    return this.http.post(environment.apiUrl + '/borrowers', newBorrower).toPromise();
+    return this.http.post(environment.apiUrl + '/borrowers', newBorrower);
   }
 
   // gets active borrower

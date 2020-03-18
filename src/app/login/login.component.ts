@@ -26,29 +26,24 @@ export class LoginComponent implements OnInit {
   isLoading = false;
 
   //function for logging in
-  login = async () => {
+  login = () => {
     this.isLoading = true;
-    try {
-      //calls api for borrower
-      let borrowerResp = await this.borrowerServ.establishBorrower(this.inputId);
-
+    //calls api for borrower
+    this.borrowerServ.establishBorrower(this.inputId).subscribe(borrowerResp => {
       //if borrower is found set as active user
       if (borrowerResp.hasOwnProperty("name")) {
         this.borrowerServ.setBorrower(borrowerResp);
         this.borrowerServ.loggedIn.next(true);
         this.loginFailed = false;
+        //sends to home page after logged in
+        this.router.navigateByUrl("/home");
       } else {
-        throw "error";
+        this.loginFailed = true;
       }
-      //sends to home page after logged in
-      this.router.navigateByUrl("/home");
-    } catch (err) {
+    }, error => {
       this.loginFailed = true;
-    } finally {
-      this.isLoading = false;
-    }
+    })
+
+    this.isLoading = false;
   }
-
-
-
 }
