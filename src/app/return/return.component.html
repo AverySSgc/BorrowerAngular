@@ -5,8 +5,8 @@
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-  <ngb-pagination [collectionSize]="totalLoans" [(page)]="currentPage" [maxSize]="5" [boundaryLinks]="true"
-    (pageChange)="setPage($event)"></ngb-pagination>
+  <ngb-pagination [collectionSize]="numLoans" [(page)]="currentPage" [maxSize]="10" [boundaryLinks]="true"
+      (pageChange)="setPage($event)"></ngb-pagination>
   <div class="mt-2">
     <table class="table table-striped">
       <thead class="thead-dark">
@@ -20,16 +20,14 @@
       <tbody>
         <tr *ngFor="let loan of loans; let i=index">
           <td class="align-middle">{{i+1+currentIndex}}</td>
-          <td class="align-middle">{{loan.branch.name}}</td>
-          <td class="align-middle">{{loan.book.title}}</td>
-          <td class="align-middle">
-            {{loan.dateOut.getMonth() + 1}}/{{loan.dateOut.getDate()}}/{{loan.dateOut.getFullYear()}}</td>
+          <td class="align-middle">{{loan.branch}}</td>
+          <td class="align-middle">{{loan.book}}</td>
+          <td class="align-middle">{{loan.dateOut.getMonth() + 1}}/{{loan.dateOut.getDate()}}/{{loan.dateOut.getFullYear()}}</td>
           <td class="align-middle">
             {{loan.dateDue.getMonth() + 1}}/{{loan.dateDue.getDate()}}/{{loan.dateDue.getFullYear()}}
             <span class="badge badge-danger" *ngIf="loan.pastDue">Past Due!</span>
           </td>
-          <td class="align-middle"><button class="btn btn-primary" (click)="open(returnModal, i+currentIndex)">Return
-              Book</button></td>
+          <td class="align-middle"><button class="btn btn-primary" (click)="open(returnModal, i)">Return Book</button></td>
         </tr>
       </tbody>
     </table>
@@ -38,14 +36,13 @@
     <div class="ds-c-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Loan #{{selectedIndex+1}} Confirmation</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Loan #{{currentIndex+selectedIndex+1}} Confirmation</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="d()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <p>Are you sure you want to return {{allLoans[selectedIndex].book.title}} to
-            {{allLoans[selectedIndex].branch.name}}?</p>
+          <p>Are you sure you want to return {{loans[selectedIndex].book}} to {{loans[selectedIndex].branch}}?</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="c()">Cancel</button>
